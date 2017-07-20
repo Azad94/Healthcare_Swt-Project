@@ -1,0 +1,29 @@
+/**
+Written by Kim Huber
+ */
+#pushobj {
+    margin-left: 20%;
+    margin-top: 50px;
+    width: 80%;
+}
+
+#menu {
+    margin-left: 10px;
+}
+
+body{
+    background: #4087ea;
+    background: -moz-radial-gradient(center, ellipse cover, #533ce1 0%, #4087ea 100%);
+    /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #533ce1), color-stop(100%, #4087ea));
+    /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover, #533ce1 0%, #4087ea 100%);
+    /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover, #533ce1 0%, #4087ea 100%);
+    /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover, #533ce1 0%, #4087ea 100%);
+    /* IE10+ */
+    background: radial-gradient(ellipse at center, #533ce1 0%, #4087ea 100%);
+    /* W3C */
+    background-size: 250% 250%;
+}

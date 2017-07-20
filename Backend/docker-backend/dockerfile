@@ -1,0 +1,9 @@
+FROM openjdk:alpine
+ENV TERM xterm
+
+ADD docker-backend/run.sh /scripts/run.sh
+RUN chmod 755 /scripts/run.sh
+VOLUME /tmp
+ADD backend/target/backend-0.0.1-SNAPSHOT.jar /app.jar
+EXPOSE  8080
+ENTRYPOINT /scripts/run.sh

@@ -1,0 +1,67 @@
+@startuml
+Task x--> "1 - location\n" Location
+Task --> "1 - status" Status
+MaintainanceTask --|> Task
+CleaningTask --|> Task
+TransportTask --|> Task
+TransportTask x--> "1 - targetLocation\n" Location
+User --> "1 - role" Role
+Task x--> "0..1 - editor" User
+Task x--> "1 -creator" User
+BeaconObject x--> "1 - location\n" Location
+BeaconObject x--> "0..1 - beacon" Beacon
+Task x--> "1 -beaconObject" BeaconObject
+User --> "1 - location" Location
+class User {
+- String name
+- String password
+- String email
+- LocaleDate lastUpdate
+}
+class Task{
+- String name
+- int level
+- String discription
+}
+class Location {
+- int building
+- int floor
+- int room
+
+}
+class MaintainanceTask{
+- String picture
+- int timeRange
+}
+class CleaningTask {
+
+}
+class TransportTask{
+
+}
+enum Status{
+CLOSED
+OPEN
+EDIT
+}
+
+class Role {
+- String name
+}
+class BeaconObject {
+- String name
+- String picture
+}
+class Beacon {
+- long id
+- String uuid
+- int major
+- int minor
+}
+
+CleaningTask -[hidden] Task
+MaintainanceTask -[hidden] Task
+Task -[hidden] BeaconObject
+User -[hidden] Role
+
+@enduml

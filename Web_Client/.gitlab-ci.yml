@@ -1,0 +1,17 @@
+image: docker:latest
+services:
+ - docker:dind
+variables:
+  DOCKER_DRIVER: overlay
+stages:
+  - build
+  - package
+  - deploy
+docker-build:
+  stage: package
+  script:
+  - docker build  -t registry.gitlab.com/swt-project/web/web:latest .
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker push registry.gitlab.com/swt-project/web/web:latest
+
+

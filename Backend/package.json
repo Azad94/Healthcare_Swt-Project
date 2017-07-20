@@ -1,0 +1,4 @@
+{
+"basePackage":"space.objectfinder",
+"configPackage":"space.objectfinder.config"
+}

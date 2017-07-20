@@ -1,0 +1,16 @@
+<phpunit >
+  <testsuites>
+    <testsuite name="Tests">
+          <file >BeaconApiTest.php</file>
+	  <file >LocationApiTest.php</file>
+	  <file >BeaconObjectApiTest.php</file>
+	  <file >ServiceApiTest.php</file>
+	  <file >RoleApiTest.php</file>
+	  <file >UserApiTest.php</file>
+          <file >MaintainanceTaskApiTest.php</file>
+          <file >TransportTaskApiTest.php</file>
+          <file >SubTaskApiTest.php</file>
+          <!--directory>.</directory-->
+    </testsuite>
+  </testsuites>
+</phpunit>

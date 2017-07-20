@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Author: Malte Grebe-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthcareApp.View.MainMenu"
+             NavigationPage.HasBackButton="False"
+             Title="Hautpmenü">
+    <ContentPage.Content>
+        <RelativeLayout>
+            <StackLayout 
+            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.15, Constant=0}"
+            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+            Spacing="20">
+                <Button x:Name="taskButton" 
+                Command="{Binding TaskCommand}"
+                Text="Aufträge"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"/>
+                <Button x:Name="qrButton"
+                Command="{Binding QRCommand}"
+                Text="QR-Code"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"/>
+                <Button x:Name="lcButton" IsEnabled="{Binding WlanCon}"
+                Command="{Binding LcCommand}"
+                Text="Location"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"/>
+                <Button x:Name="logoutButton" Clicked="logout_Clicked"
+                Text="Logout"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"/>
+                <Label x:Name="wlan" 
+                    Text="WLAN"
+                    TextColor="{Binding Wlan}"
+                    FontSize="Small"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+            </StackLayout>
+        </RelativeLayout>
+    </ContentPage.Content>
+</ContentPage>

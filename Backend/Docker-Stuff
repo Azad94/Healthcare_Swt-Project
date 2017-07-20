@@ -1,0 +1,50 @@
+### Für Tests
+
+# Um Abhänigkeiten zu vermeiden, könnt ihr euch eine eigene Datenbank in einem Docker-Container halten.
+
+
+## Vorbereitungen:
+# 1. Es muss Docker installiert sein. Dazu die folgenden Links:
+# 	Ubuntu	https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository
+#		Mac			https://docs.docker.com/docker-for-mac/install/
+#		Windows	https://docs.docker.com/docker-for-windows/install/
+#
+# 2. Das git-Repo colnen oder pullen so den aktuellen Stand erhalten:
+#		clonen	git clone git@gitlab.com:swt-project/backend.git .	
+#		pull		path/to/your/local/repo/git pull		
+#
+# 3. Da es immer wieder neuen Code gibt, muss der REST-Server vor jedem Arbeitsbeginn neu (aus dem vorhanden Code) erstellt werden.
+#			Da sich der REST-Server nun mit einer lokalen Datenbank verbinden soll, muss zunächst die entsprechende Config-Datei editiert werden:
+#				path/to/your/local/repo/backend/server/src/main/resources/application.properties
+# 			
+#				Der Inhalt sollte wie folgt sein (Achtung: Keine unnötigen Leerzeichen):
+#-----------------------------------------------------------------
+springfox.documentation.swagger.v2.path=/api-docs
+server.contextPath=/v1
+server.port=8080
+spring.jackson.date-format=space.objectfinder.RFC3339DateFormat
+spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS=false
+spring.datasource.url=jdbc:mariadb://localhost:3306/healthcare
+spring.datasource.username=root
+spring.datasource.password=12345
+spring.datasource.driverclassName=org.mariadb.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=none
+#------------------------------------------------------------------
+#
+#			Der folgende Befehl packt den Code in eine ausführbare "jar" und überspringt dabei eine Reihe von Tests.
+#				path/to/your/local/repo/backend/server  mvn package -DfailIfNoTests=false -Dtest=skip
+#
+#	4. Starte deine Datenbank: 
+#
+#		Linux:
+#			docker run --name Datenbank -e MYSQL_ROOT_PASSWORD=12345 -d -p=3306:3306 mariadb:10.3.0 && ping -c 10 localhost > /dev/null && docker exec -it Datenbank bash -c 'mysql -u "root" -p"12345" -e "create database healthcare"'
+#
+#
+#
+#		Windows:
+#			docker run --name Datenbank -e MYSQL_ROOT_PASSWORD=12345 -d -p=3306:3306 mariadb:10.3.0 & ping -n 10 localhost > NUL & docker exec -it Datenbank bash -c 'mysql -u "root" -p"12345" -e "create database healthcare"'
+
+ 
+#	5. Starte den REST-Server:
+# 		path/to/your/local/repo/backend/server java -jar deineJAR
+#

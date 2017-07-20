@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Author: Niklas Klatt-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthcareApp.View.MaintenanceFeedbackPage"
+             Title="Rückmeldung">
+    <StackLayout>
+        <Entry Text="{Binding Name}" Placeholder="Fotoname" TextChanged="TextChanged"/>
+        <Button Command="{Binding PhotoCommand}" Text="Foto" IsEnabled="{Binding ButtonActive}"/>
+        <Button Command="{Binding StoreCommamd}" Text="Sichere Änderungen"/>
+        <BoxView Color="#b1b2b5" HeightRequest="1"/>
+        <ListView x:Name="MaintenanceDetailsView" HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Title}"/>
+                            <Switch Grid.Row="0" Grid.Column="1" IsVisible="{Binding CheckBoxVisibility}" IsToggled="{Binding CheckBox}"/>
+                            <Slider Grid.Row="0" Grid.Column="1" IsVisible="{Binding SliderVisibility}" Value="{Binding Slider}" Minimum="0" Maximum="100"/>
+                            <Image Grid.Row="0" Grid.Column="1" IsVisible="{Binding ImageVisibility}" Source="{Binding Image.Source}"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

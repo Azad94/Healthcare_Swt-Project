@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Author: Malte Grebe-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthcareApp.View.ChangeWorklocation"
+             NavigationPage.HasBackButton="False"
+             Title="Arbeitsplatz">
+    <RelativeLayout>
+        <StackLayout 
+            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.15, Constant=0}"
+            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=0}"
+            Spacing="20">
+            <Label Text="Wähle ein Gebäude: "></Label>
+            <Picker x:Name="BuildingPicker" BackgroundColor="Silver" HorizontalOptions="LayoutOptions.FillAndExpand" VerticalOptions="CenterAndExpand" ItemsSource="{Binding Buildings}" SelectedIndex="{Binding BuildingsSelectedIndex}" SelectedItem="{Binding SelectedBuilding}" ItemDisplayBinding="{Binding Building}"/>
+        </StackLayout>
+    </RelativeLayout>
+</ContentPage>
+

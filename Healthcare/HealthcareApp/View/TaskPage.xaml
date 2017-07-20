@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Author: Niklas Klatt-->
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HealthcareApp.View.TaskPage"
+             Title="Auftrag">
+    <ScrollView>
+        <StackLayout Margin="20">
+            <Label Text="Allgemein" FontAttributes="Bold" FontSize="Large"/>
+            <Label Text="Auftragsname" TextColor="#b1b2b5"/>
+            <Label Text="{Binding TaskName}"/>
+            <BoxView Color="#b1b2b5" HeightRequest="1"/>
+            <Label Text="Dringlichkeit" TextColor="#b1b2b5"/>
+            <Label Text="{Binding Level}"/>
+            <BoxView Color="#b1b2b5" HeightRequest="1"/>
+            <Label Text="Auftragdetails" FontAttributes="Bold" FontSize="Large"/>
+            <Label Text="Beschreibung" TextColor="#b1b2b5"/>
+            <Editor IsEnabled="False" Text="{Binding Discription}"/>
+            <Label Text="Aktueller Ort" FontAttributes="Bold" FontSize="Large"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Text="Gebäude:" TextColor="#b1b2b5"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding CurrentBuilding}"/>
+                <Label Grid.Row="1" Grid.Column="0" Text="Stockwerk:" TextColor="#b1b2b5"/>
+                <Label Grid.Row="1" Grid.Column="1" Text="{Binding CurrentFloor}"/>
+                <Label Grid.Row="2" Grid.Column="0" Text="Raum:" TextColor="#b1b2b5"/>
+                <Label Grid.Row="2" Grid.Column="1" Text="{Binding CurrentRoom}"/>
+            </Grid>
+            <Label IsVisible="{Binding TargetVisibility}" Text="Zielort" FontAttributes="Bold" FontSize="Large"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" IsVisible="{Binding TargetVisibility}" Text="Gebäude" TextColor="#b1b2b5"/>
+                <Label Grid.Row="0" Grid.Column="1" IsVisible="{Binding TargetVisibility}" Text="{Binding TargetBuilding}"/>
+                <Label Grid.Row="1" Grid.Column="0" IsVisible="{Binding TargetVisibility}" Text="Stockwerk" TextColor="#b1b2b5"/>
+                <Label Grid.Row="1" Grid.Column="1" IsVisible="{Binding TargetVisibility}" Text="{Binding TargetFloor}"/>
+                <Label Grid.Row="2" Grid.Column="0" IsVisible="{Binding TargetVisibility}" Text="Raum" TextColor="#b1b2b5"/>
+                <Label Grid.Row="2" Grid.Column="1" IsVisible="{Binding TargetVisibility}" Text="{Binding TargetRoom}"/>
+            </Grid>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                <Button Command="{Binding AcceptCommand}" IsEnabled="{Binding AcceptButtonEnable}" Text="Annehmen"/>
+                <Button Command="{Binding FinishedCommand}" IsEnabled="{Binding FinishedButtonEnable}" Text="Abschließen"/>
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

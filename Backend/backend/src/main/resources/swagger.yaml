@@ -1,0 +1,1935 @@
+swagger: '2.0'
+info:
+  description: Beschreibung der Rest-Schnitstelle der Healthcare API
+  version: 1.0.0
+  title: Healthcare App
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'localhost:8080'
+basePath: /v1
+tags:
+  - name: task
+    description: Alles über Tasks
+  - name: beacon
+    description: Der Beacon an sich
+  - name: beaconObject
+    description: Ein Physisches Objekt
+  - name: user
+    description: Ein User
+  - name: role
+    description: Rolle der User
+  - name: beacontype
+    description: Art des Objekts
+  - name: Location
+    description: Lokationen
+  - name: MaintainanceTask
+  - name: CleaningTask
+  - name: TransportTask
+  - name: Login
+  - name: Service
+  - name: SubTask
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login
+      description: Login
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+                format: string
+              password:
+                type: string
+                format: string
+  /transporttasksApp:
+    post:
+      tags:
+        - TransportTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: date-time
+          required: false
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: date-time
+          required: false
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+  /transporttasks:
+    get:
+      tags:
+        - TransportTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: now
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: '1970-01-01'
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+    post:
+      tags:
+        - TransportTask
+      summary: Erstelle einen neuen Task
+      description: Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TransportTask'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TransportTask'
+    put:
+      tags:
+        - TransportTask
+      summary: Eine reihe Transporttasks bearbeiten
+      description: Irgendwas
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+  /transporttasksApp/size:
+    post:
+      tags:
+        - TransportTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  /transporttasks/size:
+    get:
+      tags:
+        - TransportTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  '/transporttasks/{taskid}':
+    parameters:
+      - name: taskid
+        in: path
+        type: integer
+        format: int64
+        required: true
+    get:
+      tags:
+        - TransportTask
+      summary: Erhalte einen einzelnen Task
+      description: Einzelner Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TransportTask'
+        '404':
+          description: error
+          schema:
+            type: object
+            example:
+              message: Id nicht gefunden
+    put:
+      tags:
+        - TransportTask
+      summary: Update einen Task
+      description: Eine einzelne Task neue Werte zuweisen
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TransportTask'
+    delete:
+      tags:
+        - TransportTask
+      summary: Löscht dieses Objekt
+      description: Dieses Objekt löschen
+      responses:
+        '200':
+          description: OK
+        '402':
+          description: NOT_FOUND
+  /maintainancetasksApp:
+    post:
+      tags:
+        - MaintainanceTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: now
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: '1970-01-01'
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MaintainanceTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+  /maintainancetasks:
+    get:
+      tags:
+        - MaintainanceTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: now
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: '1970-01-01'
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MaintainanceTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+    post:
+      tags:
+        - MaintainanceTask
+      summary: Erstelle einen neuen Task
+      description: Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MaintainanceTask'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MaintainanceTask'
+    put:
+        tags:
+          - TransportTask
+        summary: Eine reihe MaintainanceTask bearbeiten
+        description: Irgendwas
+        responses:
+          '200':
+            description: OK
+        parameters:
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/MaintainanceTask'
+  /maintainancetasksApp/size:
+    post:
+      tags:
+        - MaintainanceTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  /maintainancetasks/size:
+    get:
+      tags:
+        - MaintainanceTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  '/maintainancetasks/{taskid}':
+    parameters:
+      - name: taskid
+        in: path
+        type: integer
+        format: int64
+        required: true
+    get:
+      tags:
+        - MaintainanceTask
+      summary: Erhalte einen einzelnen Task
+      description: Einzelner Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MaintainanceTask'
+        '404':
+          description: error
+          schema:
+            type: object
+            example:
+              message: Id nicht gefunden
+    put:
+      tags:
+        - MaintainanceTask
+      summary: Update einen Task
+      description: Eine einzelne Task neue Werte zuweisen
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MaintainanceTask'
+    delete:
+        tags:
+          - MaintainanceTask
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /cleaningtasksApp:
+    post:
+      tags:
+        - CleaningTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: now
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: '1970-01-01'
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CleaningTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+  /cleaningtasks:
+    get:
+      tags:
+        - CleaningTask
+      summary: Erhalte die ersten 20 offenen tasks
+      description: ''
+      parameters:
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+                format: string
+              id:
+                type: integer
+                format: int64
+        - name: limit
+          in: query
+          description: Wie viele Tasks sollen geliefert werden
+          required: false
+          default: 20
+          type: integer
+          format: int32
+        - name: before
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: now
+          description: Vor welchem Datum
+        - name: since
+          in: query
+          type: string
+          format: dateTime
+          required: false
+          default: '1970-01-01'
+          description: Seit Wann
+        - name: open
+          in: query
+          type: boolean
+          required: false
+          default: true
+        - name: closed
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: processing
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: own
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Nur eigene tasks anzeigen?
+        - name: building
+          required: false
+          type: integer
+          in: query
+      responses:
+        '200':
+          description: erfolgreich
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CleaningTask'
+        '400':
+          description: error
+          schema:
+            $ref: '#/definitions/ErrorQuery'
+    post:
+      tags:
+        - CleaningTask
+      summary: Erstelle einen neuen Task
+      description: Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CleaningTask'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CleaningTask'
+    put:
+        tags:
+          - CleaningTask
+        summary: Eine reihe CleaningTask bearbeiten
+        description: Irgendwas
+        responses:
+          '200':
+            description: OK
+        parameters:
+          - name: body
+            in: body
+            required: true
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/CleaningTask'
+  /cleaningtasksApp/size:
+    post:
+      tags:
+        - CleaningTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  /cleaningtasks/size:
+    get:
+      tags:
+        - CleaningTask
+      summary: Anzahl der Tasks
+      description: Anzahl der Tasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: integer
+            format: int64
+      parameters:
+        - name: newTasks
+          in: query
+          required: true
+          type: boolean
+          description: Nur die anzahl an neuen Tasks haben seit der letzten abfrage
+        - name: userName
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              id:
+                type: integer
+                format: int64
+  '/cleaningtasks/{taskid}':
+    parameters:
+      - name: taskid
+        in: path
+        type: integer
+        format: int64
+        required: true
+    get:
+      tags:
+        - CleaningTask
+      summary: Erhalte einen einzelnen Task
+      description: Einzelner Task
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CleaningTask'
+        '404':
+          description: error
+          schema:
+            type: object
+            example:
+              message: Id nicht gefunden
+    put:
+      tags:
+        - CleaningTask
+      summary: Update einen Task
+      description: Eine einzelne Task neue Werte zuweisen
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CleaningTask'
+    delete:
+        tags:
+          - CleaningTask
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /beaconObjects:
+    get:
+      tags:
+        - beaconObject
+      summary: Alle Beaconobjekte
+      description: Alle Beaconobjekte
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BeaconObject'
+    post:
+      tags:
+        - beaconObject
+      summary: Erstellen
+      description: BeaconObjekt erstellen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BeaconObject'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BeaconObject'
+  '/beaconObjects/{beaconObjectId}':
+    parameters:
+      - name: beaconObjectId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    get:
+      tags:
+        - beaconObject
+      summary: Einzelnes Beacon Object
+      description: Ein einzelnes BeaconOjbekt
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/BeaconObject'
+    put:
+      tags:
+        - beaconObject
+      summary: Bearbeiten
+      description: Einzelnes BeaconObjekt bearbeiten
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BeaconObject'
+    delete:
+        tags:
+          - BeaconObject
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  '/beaconObjects/{beaconObjectId}/maintainancetasks':
+    parameters:
+      - name: beaconObjectId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    get:
+      tags:
+        - MaintainanceTask
+        - BeaconObjekt
+      summary: Alle Maintainancetasks die zu diesem BeaconObjekt gehören
+      description: Alle Maintainancetasks die zu diesem BeaconObjekt gehören
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MaintainanceTask'
+  '/beaconObjects/{beaconObjectId}/transporttasks':
+    parameters:
+      - name: beaconObjectId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    get:
+      tags:
+        - beaconObject
+        - TransportTask
+      summary: Erhalte alle Transporttasks die zu diesem beaconObject gehören
+      description: ''
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+  /beaconObjects/{beaconObjectId}/cleaningtasks:
+    parameters:
+      - name: beaconObjectId
+        in: path
+        type: integer
+        format: int64
+        required: true
+    get:
+      tags:
+        - CleaningTask
+        - BeaconObject
+      summary: Erhalte alle cleaningtasks zu diesem beaconObject
+      description: ''
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CleaningTask'
+  /beacons:
+    get:
+      tags:
+        - beacon
+      summary: Erhalte alle Beacons
+      description: Alle Beacons
+      parameters:
+        - name: noBeaconObject
+          in: query
+          required: false
+          type: boolean
+          default: false
+          description: Liefert alle beacons die an keinem BeaconObject befestigt sind
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Beacon'
+    post:
+      tags:
+        - beacon
+      summary: Erstelle neuen Beacon als rückgabe gibt es den fertigen beacon mit uuid
+      description: Neuen Beacon erstelen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Beacon'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              major:
+                type: integer
+                format: int32
+              minor:
+                type: integer
+                format: int32
+
+  '/beacons/{beaconId}':
+    parameters:
+      - name: beaconId
+        in: path
+        required: true
+        type: string
+    get:
+      tags:
+        - beacon
+      summary: Einen bestimmten Beacon erhalten
+      description: Einen Bestimmten beacon erhalten
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Beacon'
+    put:
+      tags:
+        - beacon
+      summary: Einen Beacon bearbeiten
+      description: Einene Beacon bearbeiten
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Beacon'
+    delete:
+        tags:
+          - Beacon
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /roles:
+    get:
+      tags:
+        - role
+      summary: Alle rollen
+      description: Alle rollen
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+    post:
+      tags:
+        - role
+      summary: Erstelle neue Role
+      description: Neue Role
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Role'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Role'
+  '/roles/{roleId}':
+    parameters:
+      - name: roleId
+        in: path
+        required: true
+        type: string
+        format: string
+    get:
+      tags:
+        - role
+      summary: Einzelne role
+      description: Einzelne Role
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Role'
+    put:
+      tags:
+        - role
+      summary: Role bearbeiten
+      description: Role Bearbeiten
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Role'
+    delete:
+        tags:
+          - Role
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /users:
+    post:
+      tags:
+        - user
+      summary: Erstelle einen neuen user
+      description: Einen Neuen User erstellen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+    get:
+      tags:
+        - user
+      summary: Liste aller User
+      description: Alle User
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+  '/users/{userId}':
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        type: string
+        format: string
+    get:
+      tags:
+        - user
+      summary: Erhalte informationen über einen User
+      description: Ein User
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+    put:
+      tags:
+        - user
+      summary: Einen User bearbeiten
+      description: Einen User bearbeiten
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+    delete:
+        tags:
+          - User
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /locations:
+    get:
+      tags:
+        - Location
+      summary: Alle Lokationen
+      description: Alle Lokationen
+      parameters:
+        - name: floor
+          in: query
+          required: false
+          type: integer
+          format: int32
+          description: Liefert alle locations mit diesem floor
+        - name: building
+          in: query
+          required: false
+          type: integer
+          format: int32
+          description: Liefert alle location mit diesem Building
+        - name: room
+          in: query
+          required: false
+          type: integer
+          format: int32
+          description: Alle Location mit diesem Raum
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+    post:
+      tags:
+        - Location
+      summary: Erstelle eine neue Location
+      description: Neue Location
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Location'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Location'
+  /locations/maintainancetasks:
+    parameters:
+      - name: floor
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: building
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: room
+        required: false
+        in: query
+        type: integer
+        format: int32
+    get:
+      tags:
+        - MaintainanceTask
+      summary: Liefert alle MaintainanceTasks zu einer örtlichen beschreibung
+      description: Was oben steht
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MaintainanceTask'
+  /locations/cleaningtasks:
+    parameters:
+      - name: floor
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: building
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: room
+        required: false
+        in: query
+        type: integer
+        format: int32
+    get:
+      tags:
+        - CleaningTask
+        - Location
+      summary: Liefert alle CleaningTask zu einer örtlichen beschreibung
+      description: Was oben steht
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CleaningTask'
+  /locations/transporttasks:
+    parameters:
+      - name: floor
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: building
+        in: query
+        required: false
+        type: integer
+        format: int32
+      - name: room
+        required: false
+        in: query
+        type: integer
+        format: int32
+    get:
+      tags:
+        - TransportTask
+        - Location
+      summary: Liefert alle TransportTask zu einer örtlichen beschreibung
+      description: Was oben steht
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+  '/locations/{locationId}':
+    parameters:
+      - name: locationId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    get:
+      tags:
+        - Location
+      summary: Erhalte eine Lokation
+      description: Eine Lokation
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Location'
+    put:
+      tags:
+        - Location
+      summary: Eine Lokation bearbeiten
+      description: Eine Lokation bearbeiten
+      responses:
+        '200':
+          description: OK
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Location'
+    delete:
+        tags:
+          - Location
+        summary: löschen
+        description: löschen
+        responses:
+          '200':
+            description: OK
+          '402':
+            description: NOT_FOUND
+  /service:
+    get:
+      tags:
+        - Service
+      summary: Erhalte einen task und erstelle ihn für eine Service anfrage
+      description: Duch einen service wird ein Task erstellt anhand des Service objekts wird entschieden um was für einen TAsk es sich handelt
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Service'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TransportTask'
+  /maintainancetasks/{maintainancetaskId}/subtaskscheckbox:
+    parameters:
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    post:
+      tags:
+        - SubTask
+      summary: Erstelle einen neuen SubTask
+      description: Einen subtask zu einem MaintainanceTask erstellen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskCheckbox'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubTaskCheckbox'
+    get:
+      tags:
+        - SubTask
+      summary: Erhalte alle subtasks zu einem MaintainanceTask
+      description: Erhale alle subtasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubTaskCheckbox'
+  /maintainancetasks/{maintainancetaskId}/subtaskscheckbox/{subtaskId}:
+    parameters:
+      - name: subtaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    delete:
+      summary: Lösche einen Subtask
+      description: Einen Subtask endgültig löschen
+      tags:
+        - SubTask
+      responses:
+        '200':
+          description: OK
+        '402':
+          description: NOT_FOUND
+    put:
+      tags:
+        - SubTask
+      summary: Subtask bearbeiten
+      description: SubTask bearbeiten
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskCheckbox'
+        '402':
+          description: NOT_FOUND
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AbstractSubTask'
+  /maintainancetasks/{maintainancetaskId}/subtasksimage:
+    parameters:
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    post:
+      tags:
+        - SubTask
+      summary: Erstelle einen neuen SubTask
+      description: Einen subtask zu einem MaintainanceTask erstellen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskImage'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubTaskImage'
+    get:
+      tags:
+        - SubTask
+      summary: Erhalte alle subtasks zu einem MaintainanceTask
+      description: Erhale alle subtasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubTaskImage'
+  /maintainancetasks/{maintainancetaskId}/subtasksimage/{subtaskId}:
+    parameters:
+      - name: subtaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    delete:
+      summary: Lösche einen Subtask
+      description: Einen Subtask endgültig löschen
+      tags:
+        - SubTask
+      responses:
+        '200':
+          description: OK
+        '402':
+          description: NOT_FOUND
+    put:
+      tags:
+        - SubTask
+      summary: Subtask bearbeiten
+      description: SubTask bearbeiten
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskImage'
+        '402':
+          description: NOT_FOUND
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubTaskImage'
+  /maintainancetasks/{maintainancetaskId}/subtasksslider:
+    parameters:
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    post:
+      tags:
+        - SubTask
+      summary: Erstelle einen neuen SubTask
+      description: Einen subtask zu einem MaintainanceTask erstellen
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskSlider'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubTaskSlider'
+    get:
+      tags:
+        - SubTask
+      summary: Erhalte alle subtasks zu einem MaintainanceTask
+      description: Erhale alle subtasks
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SubTaskSlider'
+  /maintainancetasks/{maintainancetaskId}/subtasksslider/{subtaskId}:
+    parameters:
+      - name: subtaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+      - name: maintainancetaskId
+        in: path
+        required: true
+        type: integer
+        format: int64
+    delete:
+      summary: Lösche einen Subtask
+      description: Einen Subtask endgültig löschen
+      tags:
+        - SubTask
+      responses:
+        '200':
+          description: OK
+        '402':
+          description: NOT_FOUND
+    put:
+      tags:
+        - SubTask
+      summary: Subtask bearbeiten
+      description: SubTask bearbeiten
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SubTaskSlider'
+        '402':
+          description: NOT_FOUND
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SubTaskSlider'
+definitions:
+  ErrorQuery:
+    type: object
+    properties:
+      message:
+        type: string
+        format: string
+      value:
+        type: string
+        format: string
+        description: Enthält bei falscher Query Parameter den Namen der Query
+    example:
+      message: Error in der Query
+      value: state
+  MaintainanceTask:
+    allOf:
+      - $ref: '#/definitions/Task'
+      - properties:
+          picture:
+            $ref: '#/definitions/PictureOfObject'
+          subTasks:
+            type: array
+            items:
+              $ref: '#/definitions/AbstractSubTask'
+          repeatTaskInDay:
+            type: integer
+            format: int32
+  CleaningTask:
+    allOf:
+      - $ref: '#/definitions/Task'
+  TransportTask:
+    allOf:
+      - $ref: '#/definitions/Task'
+      - properties:
+          targetLocation:
+            $ref: '#/definitions/Location'
+  Location:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      building:
+        type: integer
+        format: int32
+      floor:
+        type: integer
+        format: int32
+      room:
+        type: integer
+        format: int32
+    required:
+      - building
+      - room
+      - floor
+  Task:
+    type: object
+    discriminator: type
+    required:
+      - level
+      - creationTime
+      - creator
+      - description
+      - type
+    properties:
+      id:
+        type: integer
+        format: int64
+      creator:
+        $ref: '#/definitions/User'
+      editor:
+        $ref: '#/definitions/User'
+      description:
+        type: string
+        format: string
+        default: Kein Kommentar
+      level:
+        type: integer
+        format: int32
+        default: 1
+      creationTime:
+        type: string
+        format: dateTime
+      acceptedTime:
+        type: string
+        format: dateTime
+      closedTime:
+        type: string
+        format: dateTime
+      state:
+        type: integer
+        enum:
+          - 1
+          - 2
+          - 3
+        description: 1 bedeutet offen 2 in bearbeitung 3 geschlossen
+      beaconObject:
+        $ref: '#/definitions/BeaconObject'
+      'type':
+        type: string
+        enum: ['MaintainanceTask','CleaningTask','TransportTask']
+      role:
+        $ref: '#/definitions/Role'
+      name:
+        type: string
+        format: string
+
+
+  User:
+    type: object
+    required:
+      - name
+      - password
+      - email
+      - lastUpdate
+      - role
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        format: string
+      password:
+        type: string
+        format: password
+      email:
+        type: string
+        format: string
+      lastUpdate:
+        type: string
+        format: dateTime
+      role:
+        $ref: '#/definitions/Role'
+  Role:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        format: string
+  BeaconObject:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        format: string
+      pictureOfObject:
+        $ref: '#/definitions/PictureOfObject'
+      beacon:
+        $ref: '#/definitions/Beacon'
+      location:
+        $ref: '#/definitions/Location'
+      state:
+        type: string
+        format: string
+        description: Kann benutzt werden um einen status zu verdeutlichen
+      beaconObjectType:
+        type: string
+        enum: ['Standardbett','Seniorenbett','Kinderbett','Brandschutztür']
+  Beacon:
+    type: object
+    properties:
+      uuid:
+        type: string
+        format: string
+      major:
+        type: integer
+        format: int32
+      minor:
+        type: integer
+        format: int32
+
+  SubTaskImage:
+    allOf:
+      - $ref: '#/definitions/AbstractSubTask'
+      - properties:
+          picture:
+            type: string
+            format: byte
+  SubTaskCheckbox:
+    allOf:
+      - $ref: '#/definitions/AbstractSubTask'
+      - properties:
+          value:
+            type: boolean
+  AbstractSubTask:
+    type: object
+    discriminator: type
+    required:
+      - type
+    properties:
+      id:
+        type: integer
+        format: int64
+      title:
+        type: string
+        format: string
+      'type':
+        type: string
+        enum: ['SubTaskImage','SubTaskCheckbox','SubTaskSlider']
+  SubTaskSlider:
+    allOf:
+      - $ref: '#/definitions/AbstractSubTask'
+      - properties:
+          slider:
+            type: integer
+            format: int32
+  Service:
+    type: object
+    properties:
+      callObjects:
+        type: string
+        enum: ['Bett']
+      quantity:
+        type: integer
+        format: int32
+      targetLocation:
+        $ref: '#/definitions/Location'
+      creator:
+        $ref: '#/definitions/User'
+  PictureOfObject:
+    properties:
+      picture:
+        type: string
+        format: byte

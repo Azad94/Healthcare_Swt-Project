@@ -1,0 +1,94 @@
+image: docker:latest
+services:
+  - docker:dind
+variables:
+  DOCKER_DRIVER: overlay
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+stages:
+  - build
+  - package
+  - deploy
+maven-doku:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - "mkdir -p doc/javadoc"
+    - "mkdir -p doc/jacoco"
+    - "mkdir -p doc/api-doc"
+    - "java -jar swagger-codegen-cli.jar generate -l html2 -i backend/src/main/resources/swagger.yaml -o doc/api-doc"
+    - "mvn -f backend/pom.xml javadoc:javadoc"
+    - "mv backend/target/site/apidocs/* doc/javadoc"
+  artifacts:
+    paths:
+      - doc
+  only:
+  - master
+maven-test:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+  - "mkdir -p doc/jacoco"
+  - "mvn -f backend/pom.xml clean test -B -Dspring.profiles.active=dev"
+  - "mvn -f backend/pom.xml jacoco:report -B -Dspring.profiles.active=dev"
+  - "mv backend/target/site/jacoco/* doc/jacoco"
+  artifacts:
+    paths:
+      - doc
+  only:
+  - master
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - "echo $PWD"
+    - "mvn -f backend/pom.xml clean package -B -DskipTests -Dspring.profiles.active=dev"
+    - "ls backend/target"
+  artifacts:
+    paths:
+      - backend/target/*.jar
+  only:
+  - master
+maven-build-productive:
+  image: maven:3-jdk-8
+  stage: build
+  script:
+    - "cd docker-backend"
+    - "mvn -f backend/pom.xml clean package -B   -Dspring.profiles.active=productive"
+    - "mv backend/target/*.jar $PWD"
+  artifacts:
+    paths:
+      - backend-0.0.1-SNAPSHOT.jar
+  only:
+  - productive
+docker-build:
+  stage: package
+  script:
+  - docker build -f docker-backend/dockerfile -t registry.gitlab.com/swt-project/backend/backend:latest .
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker push registry.gitlab.com/swt-project/backend/backend:latest
+  only:
+  - master
+docker-build-productive:
+  stage: package
+  script:
+  - cd docker-backend
+  - docker build -t registry.gitlab.com/swt-project/backend/backend:productive .
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker push registry.gitlab.com/swt-project/backend/backend:productive
+  only:
+  - productive
+
+pages:
+  stage: deploy
+  script:
+  - mkdir .public
+  - cp  doc/index.html .public
+  - cp -r doc/jacoco .public/jacoco
+  - cp -r doc/api-doc .public/api-doc
+  - cp -r doc/javadoc .public/javadoc
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
